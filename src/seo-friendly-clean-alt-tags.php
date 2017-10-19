@@ -64,7 +64,8 @@ add_filter('add_attachment', 'insert_image_alt_tag', 10, 2);
 function insert_image_alt_tag($post_ID){
 		$title = get_the_title($post_ID);
 	//Make alphanumeric (removes all other characters)
-	$title = preg_replace("/[^a-z0-9_\s-]/", ' ', $title);
+	// $title = preg_replace("/[^a-z0-9_\s-]/", ' ', $title);
+	$title = preg_replace("/[^a-zA-Z0-9_\s-]+/", ' ', $title);
 	//Clean up multiple dashes or whitespaces
 	$title = preg_replace("/[\s-]+/", " ", $title);
 	//Replace Underscores with a single space

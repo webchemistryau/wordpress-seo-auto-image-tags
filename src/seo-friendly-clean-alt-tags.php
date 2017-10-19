@@ -62,14 +62,11 @@ function seo_image_settings_link( $actions, $plugin_file ){
 add_filter('add_attachment', 'insert_image_alt_tag', 10, 2);
 
 function insert_image_alt_tag($post_ID){
-		$title = get_the_title($post_ID);
+	$clean_title = get_the_title($post_ID);
 	//Make alphanumeric (removes all other characters)
-	// $title = preg_replace("/[^a-z0-9_\s-]/", ' ', $title);
-	$title = preg_replace("/[^a-zA-Z0-9_\s-]+/", ' ', $title);
+	$clean_title = preg_replace("/[^a-zA-Z0-9\s_-]+/"," ", $clean_title);
 	//Clean up multiple dashes or whitespaces
-	$title = preg_replace("/[\s-]+/", " ", $title);
-	//Replace Underscores with a single space
-	$clean_title = str_replace('_', ' ', $title);
+	$clean_title = trim(preg_replace("/[\s_-]+/", " ", $clean_title));
 	//Convert to title case
 	$clean_title = ucwords(strtolower($clean_title));
 	

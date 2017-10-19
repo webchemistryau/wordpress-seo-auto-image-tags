@@ -55,10 +55,9 @@ function seo_image_settings_link( $actions, $plugin_file ){
 add_filter('add_attachment', 'insert_image_alt_tag', 10, 2);
 
 function insert_image_alt_tag($post_ID){
-	$clean_title = get_the_title($post_ID);
-	// $clean_title = basename(get_attached_file($post_ID));
+	$clean_title = pathinfo(get_attached_file($post_ID),PATHINFO_FILENAME);
 	//Make alphanumeric (removes all other characters)
-	$clean_title = trim(preg_replace("/[^[[:alnum:]]+/"," ", $clean_title));
+	$clean_title = trim(preg_replace("/[^[:alnum:]]+/"," ", $clean_title));
 	//Convert to title case
 	$clean_title = ucwords(strtolower($clean_title));
 	

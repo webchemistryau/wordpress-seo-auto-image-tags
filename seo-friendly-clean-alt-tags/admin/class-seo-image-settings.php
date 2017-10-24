@@ -172,7 +172,7 @@ class SeoImageSettings{
 			$html .= '<div class="seo-image-tags">';
 			$html .= '<div class="updated"><h3 style="font-size:14px;">Database update successful!</h3>' .
 			'<p style="font-size:14px;">Parsed: <b>'. $file_counts['total'] . '</b> files' .
-			'<br/>Created: <b>'. $file_counts['created'] . '</b> tags' 
+			'<br/>Created: <b>'. $file_counts['created'] . '</b> tags' .
 			'<br/>Updated: <b>' . $file_counts['updated'] . '</b> tags' .
 			'<br/>Deleted: <b>' . $file_counts['deleted'] . '</b> tags' .
 			'</p></div></div>';

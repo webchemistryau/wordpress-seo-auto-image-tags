@@ -109,7 +109,7 @@ function batch_update_image_tags($is_update){
 				//echo $type;
 				if (strpos($type, $image_mime) !== false){
 
-					if ( $is_update == True ){
+					if ( $is_update ){
 						//if has post meta for alt tag, update it else add it.
 						if (! add_post_meta( $post->ID, '_wp_attachment_image_alt', $title, true )){
 							if ((empty($tag) || (($tag_len <= 2 ) && ($tag_str !== $title)))){

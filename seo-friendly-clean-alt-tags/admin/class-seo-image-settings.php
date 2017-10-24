@@ -177,7 +177,7 @@ class SeoImageSettings{
 			'<br/>Deleted: <b>' . $file_counts['deleted'] . '</b> tags' .
 			'</p></div></div>';
 		}
-		$html .= '<input type="checkbox" id="delete_tags" name="seo_image_option['.$opt.']" value="1"' . checked( 1, $options[$opt], false ) . '/>';
+		$html .= '<input type="checkbox" id="'.$opt.'" name="seo_image_option['.$opt.']" value="1"' . checked( 1, $options[$opt], false ) . '/>';
 		return $html;
 	}
 }

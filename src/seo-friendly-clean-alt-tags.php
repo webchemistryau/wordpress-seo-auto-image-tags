@@ -55,6 +55,7 @@ function seo_image_settings_link( $actions, $plugin_file ){
 add_filter('add_attachment', 'insert_image_alt_tag', 10, 2);
 
 function insert_image_alt_tag($post_ID){
+	if(!wp_attachment_is_image( $post_ID )) return;
 	$clean_title = pathinfo(get_attached_file($post_ID),PATHINFO_FILENAME);
 	//Make alphanumeric (removes all other characters)
 	$clean_title = trim(preg_replace("/[^[:alnum:]]+/"," ", $clean_title));

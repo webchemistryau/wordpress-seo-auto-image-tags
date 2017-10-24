@@ -1,11 +1,11 @@
 <?php
 /*
-* Plugin Name: SEO Friendly Clean ALT Tags
+* Plugin Name: SEO Friendly Clean Alt Tags
 * Plugin URI: http://www.menkom.com.au/
 * Description: Auto generate clean ALT tags & Title tags for your images as they are uploaded. Automatically removes hyphens, periods and other characters to generate clean alt tag names.
 * Version: 1.0
-* Author: Menkom
-* Author URI: http://www.menkom.com.au/
+* Author: Web Chemistry
+* Author URI: http://www.webchemistry.com.au/
 * Text Domain: seo-friendly-clean-alt-tags
 * License: GPL2
 */

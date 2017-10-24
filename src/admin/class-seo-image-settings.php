@@ -145,7 +145,7 @@ class SeoImageSettings{
 		} else if (isset($options['delete_tags']) && (isset($options['update_tags'] ))) {
 			$file_counts = batch_update_image_tags(false);
 		}
-		echo $this->result_count($file_counts);
+		echo $this->result_count('delete_tags',$file_counts);
 	}
 
 	/**
@@ -163,10 +163,10 @@ class SeoImageSettings{
 			$file_counts = batch_update_image_tags(true);
 			delete_option( 'seo_image_option' );
 		} 
-		echo $this->result_count($file_counts);
+		echo $this->result_count('update_tags',$file_counts);
 	}
 
-	private function result_count($file_counts){
+	private function result_count($opt,$file_counts){
 		$html = '';
 		if($file_counts){
 			$html .= '<div class="seo-image-tags">';
@@ -177,7 +177,7 @@ class SeoImageSettings{
 			'<br/>Deleted: <b>' . $file_counts['deleted'] . '</b> tags' .
 			'</p></div></div>';
 		}
-		$html .= '<input type="checkbox" id="delete_tags" name="seo_image_option[delete_tags]" value="1"' . checked( 1, $options['delete_tags'], false ) . '/>';
+		$html .= '<input type="checkbox" id="delete_tags" name="seo_image_option['.$opt.']" value="1"' . checked( 1, $options[$opt], false ) . '/>';
 		return $html;
 	}
 }

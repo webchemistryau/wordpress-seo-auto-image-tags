@@ -78,11 +78,24 @@ function insert_image_alt_tag($post_ID){
 * Getting all posts that are attachments (images included) and adds the the
 * alt text meta data to the image based on the title of the post
 */
-function batch_update_image_tags($is_update){
+function batch_update_image_tags($update_tags,$update_titles){
+
 	$total = 0;
 	$created = 0;
 	$updated = 0;
 	$deleted = 0;
+
+	$count = array(
+		'total' => $total,
+		'created' => print_r($update_tags,true),
+		'updated' => print_r($update_titles,true),
+		'deleted' => $deleted
+	);
+
+	//count of files updated
+	return $count;
+
+
 
 	$args = array(
 		'post_type' => 'attachment',

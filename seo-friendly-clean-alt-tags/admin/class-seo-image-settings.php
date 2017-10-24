@@ -80,20 +80,20 @@ class SeoImageSettings{
 		);
 
 		add_settings_field(
-			'delete_tags', // ID
-			'<label for="delete_tags">Delete Image Tags</label>', // Title
-			array( $this, 'delete_tags_callback' ), // Callback
+			'update_titles', // ID
+			'<label for="update_titles">Update Titles</label>', // Title
+			array( $this, 'update_titles_display' ), // Callback
+			'seo-image-settings', // Page
+			'seo_image_settings_section' // Section
+		);
+		add_settings_field(
+			'update_tags_2', // ID
+			'<label for="update_tags">Update Alt Tags</label>', // Title
+			array( $this, 'update_tags_display' ), // Callback
 			'seo-image-settings', // Page
 			'seo_image_settings_section' // Section
 		);
 
-		add_settings_field(
-			'update_tags', // ID
-			'<label for="update_tags">Update Image Tags</label>', // Title
-			array( $this, 'update_tags_callback' ), // Callback
-			'seo-image-settings', // Page
-			'seo_image_settings_section' // Section
-		);
 	}
 
 	/**
@@ -105,8 +105,8 @@ class SeoImageSettings{
 	{
 		$new_input = array();
 
-		if( isset( $input['delete_tags'] ) )
-			$new_input['delete_tags'] = absint( $input['delete_tags'] );
+		if( isset( $input['update_titles'] ) )
+			$new_input['update_titles'] = absint( $input['update_titles'] );
 
 		if( isset( $input['update_tags'] ) )
 			$new_input['update_tags'] = absint( $input['update_tags'] );
@@ -151,6 +151,19 @@ class SeoImageSettings{
 	/**
 	 * Get the settings option array and print one of its values
 	 */
+	public function update_tags_display(){
+		$options = get_option( 'seo_image_option' );
+		echo 	'<label><input type="radio" name="update_tags" value="all"' . checked(1, $options['update_tags'], true) . '> All</label>'
+				.'<br /><br />'
+        		.'<label><input type="radio" name="update_tags" value="empty"' . checked(2, $options['update_tags'], true) . '> Empty only</label>'
+        		;
+	}
+
+	public function update_titles_display(){
+		$options = get_option( 'seo_image_option' );
+		echo '<input type="checkbox" id="update_titles" name="seo_image_option['.$opt.']" value="1"' . checked( 1, $options['update_titles'], false ) . '/>';
+	}
+
 	public function update_tags_callback(){
 		//Get plugin options
 		$options = get_option( 'seo_image_option' );

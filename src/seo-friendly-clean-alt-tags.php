@@ -95,40 +95,38 @@ function batch_update_image_tags($is_update){
 		$attachments = get_posts($args);
 
 	//if there are posts
-		if ($attachments){
-			$image_mime = 'image';
-			//Loop thru each attachment
-			foreach ($attachments as $post){
-			//get post data ready,set title var to post title
+	if ($attachments){
+		//Loop thru each attachment
+		foreach ($attachments as $post){
+			if ( wp_attachment_is_image( $post->ID ) ){
+				//get post data ready,set title var to post title
 				setup_postdata($post);
 				$title = get_the_title($post->ID);
-				$type = get_post_mime_type($post->ID);
 				$tag = get_post_meta( $post->ID, '_wp_attachment_image_alt', true );
 				$tag_str = strval($tag);
 				$tag_len = strlen($tag_str);
 				//echo $type;
-				if (strpos($type, $image_mime) !== false){
 
-					if ( $is_update ){
-						//if has post meta for alt tag, update it else add it.
-						if (! add_post_meta( $post->ID, '_wp_attachment_image_alt', $title, true )){
-							if ((empty($tag) || (($tag_len <= 2 ) && ($tag_str !== $title)))){
-								insert_image_alt_tag($post->ID);
-									$updated++;
-							}
-						} else {
+				if ( $is_update ){
+					//if has post meta for alt tag, update it else add it.
+					if (! add_post_meta( $post->ID, '_wp_attachment_image_alt', $title, true )){
+						if ((empty($tag) || (($tag_len <= 2 ) && ($tag_str !== $title)))){
 							insert_image_alt_tag($post->ID);
-							$created++; //update counter
+								$updated++;
 						}
 					} else {
-						//if has post meta for alt tag, update it else add it.
-						if (! empty($tag) ){
-							delete_post_meta($post->ID, '_wp_attachment_image_alt', $title);
-							$deleted++; //update counter
-						} //end add_post_meta
+						insert_image_alt_tag($post->ID);
+						$created++; //update counter
 					}
-					$total++;
-				} //end of image_mime
+				} else {
+					//if has post meta for alt tag, update it else add it.
+					if (! empty($tag) ){
+						delete_post_meta($post->ID, '_wp_attachment_image_alt', $title);
+						$deleted++; //update counter
+					} //end add_post_meta
+				}
+				$total++;
+			} //end of image_mime
 
 		} //end foreach
 

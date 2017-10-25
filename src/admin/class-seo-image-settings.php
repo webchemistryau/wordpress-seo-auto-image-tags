@@ -121,25 +121,16 @@ class SeoImageSettings{
 	 * Print the Section text
 	 */
 	public function print_section_info(){
-
 		/*HERE IS THE CALLBACK FOR RUN THE PROCESS.
-		IT NEEDS TO BE REPLACED BAY A PROPER WAY OF CALLING, AFTER SUBMITED THE FORM, 
+		IT NEEDS TO BE REPLACED BY A PROPER WAY OF CALLING, AFTER SUBMITED THE FORM, 
 		NOT ONLY WHEN THE SETTINGS WHERE UPDATED*/
 		if($this->run_algorithm){
-			/*print_r($_REQUEST);
-			print_r($this->run_algorithm);*/
-			// die();
 			$options = get_option( 'seo_image_option' );
 			$file_counts = batch_update_image_tags(intval($options['update_tags']),boolval($options['update_titles']));
 			echo $this->result_count($file_counts);
 		}
 
-		print '<br/><p style="font-size:14px; margin:0 25% 0 0;"><strong>IMPORTANT:&nbsp;&nbsp;</strong>'.
-
-		'Running this database updater will <i>modify</i> the Alt text fields for images in the database. Any pre-existing images '.
-		'that have appropriate Alt tags filled in <b>will not</b> be changed, only ones where the field is blank or less than 2 characters long. '.
-		'If you have a lot of pre-existing images without alt text, it is <b>recommended</b> you run the database updater.'.
-		'The alt tags will be applied and saved to the database automatically on upload going forward.</p>';
+		print '<p style="max-width: 600px;"><strong>IMPORTANT:</strong> Running this database updater will <i>modify</i> the Title and Alt text fields for images in the database. If you have a lot of pre-existing images without alt text, it is <b>recommended</b> you run the database updater. The alt tags will be applied and saved to the database automatically on upload going forward.</p>';
 	}
 	private function result_count($file_counts){
 		$html = '';

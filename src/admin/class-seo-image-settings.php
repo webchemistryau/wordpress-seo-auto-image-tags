@@ -132,6 +132,7 @@ class SeoImageSettings{
 
 		print '<p style="max-width: 600px;"><strong>IMPORTANT:</strong> Running this database updater will <i>modify</i> the Title and Alt text fields for images in the database. If you have a lot of pre-existing images without alt text, it is <b>recommended</b> you run the database updater. The alt tags will be applied and saved to the database automatically on upload going forward.</p>';
 	}
+	
 	private function result_count($file_counts){
 		$html = '';
 		if($file_counts){

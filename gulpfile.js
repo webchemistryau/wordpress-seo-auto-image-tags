@@ -1,17 +1,27 @@
 /*
 	INCLUDES ______________________________________________________________________
 */
-var gulp = require('gulp');
-var autoprefixer = require('gulp-autoprefixer');
-var sass = require('gulp-sass');
-var cleanCSS = require('gulp-clean-css');
-var jshint = require('gulp-jshint');
-var jshintstylish = require('jshint-stylish');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-var rename = require('gulp-rename');
-var htmlmin = require('gulp-htmlmin');
-var imagemin = require('gulp-imagemin');
+const gulp = require('gulp');
+const autoprefixer = require('gulp-autoprefixer');
+const sass = require('gulp-sass');
+const cleanCSS = require('gulp-clean-css');
+const jshint = require('gulp-jshint');
+const jshintstylish = require('jshint-stylish');
+const concat = require('gulp-concat');
+const uglify = require('gulp-uglify');
+const rename = require('gulp-rename');
+const htmlmin = require('gulp-htmlmin');
+const imagemin = require('gulp-imagemin');
+
+var conn;try{
+	var ftp_connect  = require('./ftp_connect.json');
+	const ftp = require( 'vinyl-ftp' );
+	conn = ftp.create( ftp_connect );
+}catch(e){}
+/*var send_ftp = function(stream){
+	if(ftp_connect){		
+	}
+}*/
 /*
 	DIRECTORIES ______________________________________________________________________
 
@@ -107,6 +117,7 @@ gulp.task('php',function() {
 	gulp.src(php_src,{base:src_dir})
 	// gulp.src(php_src,{base:src_dir,read:false})
 		// .pipe(phpMinify({binary: 'C:/xampp/php/php.exe'}))
+		.pipe(conn.dest( '/web/jose-2.webchemistry.studio/public_html/wp-content/plugins/seo-friendly-clean-alt-tags/' ))
 		.pipe(gulp.dest(php_build));
 });
 

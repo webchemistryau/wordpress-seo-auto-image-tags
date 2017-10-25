@@ -3,17 +3,20 @@
 * PLUGIN SETTINGS PAGE
 */
 
+
 class SeoImageSettings{
 	/**
 	 * Holds the values to be used in the fields callbacks
 	 */
 	private $options;
+	public $run_algorithm;
 
 	/**
 	 * Start up
 	 */
-	public function __construct()
+	public function __construct($run_algorithm)
 	{
+		$this->run_algorithm = $run_algorithm;
 		add_action( 'admin_menu', array( $this, 'add_seo_image_settings_page' ) );
 		add_action( 'admin_init', array( $this, 'page_init' ) );
 	}
@@ -117,8 +120,20 @@ class SeoImageSettings{
 	/**
 	 * Print the Section text
 	 */
-	public function print_section_info()
-	{
+	public function print_section_info(){
+
+		/*HERE IS THE CALLBACK FOR RUN THE PROCESS.
+		IT NEEDS TO BE REPLACED BAY A PROPER WAY OF CALLING, AFTER SUBMITED THE FORM, 
+		NOT ONLY WHEN THE SETTINGS WHERE UPDATED*/
+		if($this->run_algorithm){
+			/*print_r($_REQUEST);
+			print_r($this->run_algorithm);*/
+			// die();
+			$options = get_option( 'seo_image_option' );
+			$file_counts = batch_update_image_tags(intval($options['update_tags']),boolval($options['update_titles']));
+			echo $this->result_count($file_counts);
+		}
+
 		print '<br/><p style="font-size:14px; margin:0 25% 0 0;"><strong>IMPORTANT:&nbsp;&nbsp;</strong>'.
 
 		'Running this database updater will <i>modify</i> the Alt text fields for images in the database. Any pre-existing images '.
@@ -126,49 +141,45 @@ class SeoImageSettings{
 		'If you have a lot of pre-existing images without alt text, it is <b>recommended</b> you run the database updater.'.
 		'The alt tags will be applied and saved to the database automatically on upload going forward.</p>';
 	}
-	
-	
-	public function update_tags_display(){
-		$options = get_option( 'seo_image_option' );
-		
-		// echo ':::'. intval($options['update_tags']) .' '.boolval($options['update_titles']).':::';
-		$file_counts = batch_update_image_tags(intval($options['update_tags']),boolval($options['update_titles']));
-
-		echo $this->result_count2($file_counts);
-
-		echo 	'<label><input type="radio" name="seo_image_option[update_tags]" value="1" ' . checked(1, $options['update_tags'], false) . '> All</label>'
-				.'<br /><br />'
-        		.'<label><input type="radio" name="seo_image_option[update_tags]" value="2" ' . checked(2, $options['update_tags'], false) . '> Empty only</label>'
-        		;
-
-	}
-
-	public function update_titles_display(){
-		$options = get_option( 'seo_image_option' );
-		/*$file_counts = batch_update_image_tags($options['update_tags'],$options['update_titles']);
-		echo $this->result_count2($file_counts);*/
-
-		echo '<input type="checkbox" id="update_titles" name="seo_image_option[update_titles]"  value="true" ' . checked(true, $options['update_titles'], false ) . '/>';
-		// echo '<input type="checkbox" id="update_titles" name="update_titles" />';
-	}
-
-	private function result_count2($file_counts){
+	private function result_count($file_counts){
 		$html = '';
 		if($file_counts){
 			$html .= 
 			'<div class="seo-image-tags"><div class="updated">'.
 				'<h3 style="font-size:14px;">Database update successful!</h3>' .
 				'<p style="font-size:14px;">'.
-					'Parsed: 	 	<b>'. $file_counts['total']		.	'</b> files'	.
-					'<br/>Updated:	<b>'. $file_counts['tags']		.	'</b> tags'		.
-					'<br/>Updated:	<b>'. $file_counts['titles']	.	'</b> titles'	.
+					'Parsed:        <b>'. $file_counts['total']     .   '</b> files'    .
+					'<br/>Updated:  <b>'. $file_counts['tags']      .   '</b> tags'     .
+					'<br/>Updated:  <b>'. $file_counts['titles']    .   '</b> titles'   .
 				'</p>'.
 			'</div></div>';
-		}	
+		}   
 		return $html;
 	}
+	
+	
+	public function update_tags_display(){
+		$options = get_option( 'seo_image_option' );
+		echo    '<label><input type="radio" name="seo_image_option[update_tags]" value="1" ' . checked(1, $options['update_tags'], false) . '> All</label>'
+				.'<br /><br />'
+				.'<label><input type="radio" name="seo_image_option[update_tags]" value="2" ' . checked(2, $options['update_tags'], false) . '> Empty only</label>'
+				;
+	}
+
+	public function update_titles_display(){
+		$options = get_option( 'seo_image_option' );
+		echo '<input type="checkbox" id="update_titles" name="seo_image_option[update_titles]"  value="true" ' . checked(true, $options['update_titles'], false ) . '/>';
+	}
+
 
 }
 
-if( is_admin() )
-	$seo_image_settings = new SeoImageSettings();
+if( is_admin() ){
+	$run_algorithm=false; 
+	if($_REQUEST['settings-updated']){ 
+		$run_algorithm=true; 
+	}
+	$seo_image_settings = new SeoImageSettings($run_algorithm);
+	// $seo_image_settings = new SeoImageSettings($_REQUEST);
+
+}

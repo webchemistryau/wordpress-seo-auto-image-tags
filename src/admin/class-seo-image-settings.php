@@ -30,8 +30,8 @@ class SeoImageSettings{
 
 		add_submenu_page(
 			'tools.php',
-			'SEO Friendly Clean ALT Tags',
-			'SEO Friendly Clean ALT Tags',
+			'SEO Auto Image Tags',
+			'SEO Auto Image Tags',
 			'manage_options',
 			'seo-friendly-clean-alt-tags',
 			array( $this, 'create_seo_image_settings_page' )
@@ -47,7 +47,7 @@ class SeoImageSettings{
 		// $this->options = get_option( 'seo_image_option' );
 		?>
 		<div class="wrap">
-			<h1>SEO Friendly Clean ALT Tags Settings</h1>
+			<h1>SEO Auto Image Tags Settings</h1>
 			<form method="post" action="options.php">
 
 			<?php

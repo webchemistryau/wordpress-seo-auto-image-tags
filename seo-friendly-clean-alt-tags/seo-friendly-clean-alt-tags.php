@@ -55,7 +55,7 @@ function seo_image_settings_link( $actions, $plugin_file ){
 add_filter('add_attachment', 'insert_image_alt_tag', 10, 2);
 
 function insert_image_alt_tag($post_ID,$update_tag=1,$update_title=true){
-	// $update_tag -> 1:all, 2:empty only
+	// $update_tag -> 0:none, 1:all, 2:empty only
 	$updated = array('title'=>false,'tag'=>false);
 
 	if(!wp_attachment_is_image( $post_ID )) return;
@@ -95,7 +95,7 @@ function insert_image_alt_tag($post_ID,$update_tag=1,$update_title=true){
 * alt text meta data to the image based on the title of the post
 */
 function batch_update_image_tags($update_tags,$update_titles){
-	// $update_tags -> 1:all, 2:empty only
+	// $update_tags -> 0:none, 1:all, 2:empty only
 
 	$total = 0;
 	$tags = 0;

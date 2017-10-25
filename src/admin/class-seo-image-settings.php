@@ -126,18 +126,24 @@ class SeoImageSettings{
 		NOT ONLY WHEN THE SETTINGS WHERE UPDATED*/
 		if($this->run_algorithm){
 			$options = get_option( 'seo_image_option' );
-			$file_counts = batch_update_image_tags(intval($options['update_tags']),boolval($options['update_titles']));
-			echo $this->result_count($file_counts);
+			if($options['update_titles']||$options['update_tags']){
+				// CLEAN OPTIONS to avoid accidents
+				update_option( 'seo_image_option',array('update_tags'=>0,'update_titles'=>false));
+				// Calls process
+				$file_counts = batch_update_image_tags(intval($options['update_tags']),boolval($options['update_titles']));
+				echo $this->result_count($file_counts);
+			}
+			else echo $this->result_count();
 		}
 
 		print '<p style="max-width: 600px;"><strong>IMPORTANT:</strong> Running this database updater will <i>modify</i> the Title and Alt text fields for images in the database. If you have a lot of pre-existing images without alt text, it is <b>recommended</b> you run the database updater. The alt tags will be applied and saved to the database automatically on upload going forward.</p>';
 	}
-	
+
 	private function result_count($file_counts){
 		$html = '';
 		if($file_counts){
 			$html .= 
-			'<div class="seo-image-tags"><div class="updated">'.
+			'<div class="seo-image-tags"><div class="notice notice-success is-dismissible">'.
 				'<h3 style="font-size:14px;">Database update successful!</h3>' .
 				'<p style="font-size:14px;">'.
 					'Parsed:        <b>'. $file_counts['total']     .   '</b> files'    .
@@ -145,7 +151,13 @@ class SeoImageSettings{
 					'<br/>Updated:  <b>'. $file_counts['titles']    .   '</b> titles'   .
 				'</p>'.
 			'</div></div>';
-		}   
+		}
+		else $html.= 
+			'<div class="seo-image-tags"><div class="notice notice-warning is-dismissible">'.
+				'<p style="font-size:14px;">'.
+					'<strong>0 files updated.</strong> No options were selected'.
+				'</p>'.
+			'</div></div>';
 		return $html;
 	}
 	
@@ -155,6 +167,8 @@ class SeoImageSettings{
 		echo    '<label><input type="radio" name="seo_image_option[update_tags]" value="1" ' . checked(1, $options['update_tags'], false) . '> All</label>'
 				.'<br /><br />'
 				.'<label><input type="radio" name="seo_image_option[update_tags]" value="2" ' . checked(2, $options['update_tags'], false) . '> Empty only</label>'
+				.'<br /><br />'
+				.'<label><input type="radio" name="seo_image_option[update_tags]" value="0" ' . checked(0, $options['update_tags'], false) . '> None</label>'
 				;
 	}
 

@@ -13,15 +13,15 @@ const rename = require('gulp-rename');
 const htmlmin = require('gulp-htmlmin');
 const imagemin = require('gulp-imagemin');
 
-var conn;try{
+var conn,ftp_connect;try{
 	var ftp_connect  = require('./ftp_connect.json');
 	const ftp = require( 'vinyl-ftp' );
 	conn = ftp.create( ftp_connect );
 }catch(e){}
-/*var send_ftp = function(stream){
-	if(ftp_connect){		
-	}
-}*/
+function ftpUpload(stream){
+	if(ftp_connect && conn) stream.pipe(conn.dest(ftp_connect.remote_path));
+}
+
 /*
 	DIRECTORIES ______________________________________________________________________
 
@@ -114,11 +114,12 @@ tasks.once.push('lib');
 /* PHP ____________________________________________________________________________*/
 
 gulp.task('php',function() {
-	gulp.src(php_src,{base:src_dir})
+	var stream = gulp.src(php_src,{base:src_dir})
 	// gulp.src(php_src,{base:src_dir,read:false})
 		// .pipe(phpMinify({binary: 'C:/xampp/php/php.exe'}))
-		.pipe(conn.dest( '/web/jose-2.webchemistry.studio/public_html/wp-content/plugins/seo-friendly-clean-alt-tags/' ))
 		.pipe(gulp.dest(php_build));
+	// Upload to ftp
+	ftpUpload(stream);
 });
 
 gulp.task('php_w', function() { gulp.watch(php_src,['php']);});

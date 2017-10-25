@@ -130,7 +130,7 @@ class SeoImageSettings{
 				// CLEAN OPTIONS to avoid accidents
 				update_option( 'seo_image_option',array('update_tags'=>0,'update_titles'=>false));
 				// Calls process
-				$file_counts = batch_update_image_tags(intval($options['update_tags']),boolval($options['update_titles']));
+				$file_counts = sait_batch_set_image_tags(intval($options['update_tags']),boolval($options['update_titles']));
 				echo $this->result_count($file_counts);
 			}
 			else echo $this->result_count();

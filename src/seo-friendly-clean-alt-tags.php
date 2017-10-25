@@ -1,6 +1,6 @@
 <?php
 /*
-* Plugin Name: SEO Friendly Clean Alt Tags
+* Plugin Name: SEO Auto Image Tags
 * Plugin URI: https://www.webchemistry.com.au/
 * Description: Auto generate clean ALT tags & Title tags for your images as they are uploaded. Automatically removes hyphens, periods and other characters to generate clean alt tag names.
 * Version: 1.0
@@ -14,30 +14,16 @@ defined( 'ABSPATH' ) or die( 'Plugin file cannot be accessed directly.' );
 
 include_once('admin/class-seo-image-settings.php');
 
-/**
-* Register and enqueue jQuery files to run on frontend, enqueue on admin_init
-*/
-add_action( 'init', 'register_siat_scripts' );
 
-
-function register_siat_scripts(){
-	/*wp_register_script( 'siat_scripts', plugins_url('inc/siat-scripts.js', __FILE__), array('jquery'));
-	wp_register_style( 'siat_styles', plugins_url('inc/siat-styles.css', __FILE__));
-	wp_enqueue_script( 'siat_scripts' );
-	wp_enqueue_style( 'siat_styles' );	Removed to test if it actually provides any value. */
-}
-
-//add_action( 'admin_notices', 'display_activation_notice' );
-
-function display_activation_notice(){
+//add_action( 'admin_notices', 'sait_display_activation_notice' );
+function sait_display_activation_notice(){
 	//if (is_plugin_active('seo-image-alt-tags/seo-image-alt-tags.php')){
-		echo '<div id="error" class="error notice is-dismissible"><p><b>SEO Friendly Clean ALT Tags</b> may not be completely up to date. <a href="tools.php?page=seo-friendly-clean-alt-tags">Click here</a> to configure settings and update database.</div>';
+		echo '<div id="error" class="error notice is-dismissible"><p><b>SEO Auto Image Tags</b> may not be completely up to date. <a href="tools.php?page=seo-friendly-clean-alt-tags">Click here</a> to configure settings and update database.</div>';
 	//}
 }
 
-add_filter( 'plugin_action_links', 'seo_image_settings_link', 10, 5 );
-
-function seo_image_settings_link( $actions, $plugin_file ){
+add_filter( 'plugin_action_links', 'sait_settings_link', 10, 5 );
+function sait_settings_link( $actions, $plugin_file ){
 	static $plugin;
 	if (!isset($plugin)) $plugin = plugin_basename(__FILE__);
 
@@ -52,9 +38,9 @@ function seo_image_settings_link( $actions, $plugin_file ){
 * Copy image title and save to Alt text field when image is uploaded. Runs anytime
 * an image is uploaded, automatically.
 */
-add_filter('add_attachment', 'insert_image_alt_tag', 10, 2);
+add_filter('add_attachment', 'sait_set_tags', 10, 2);
 
-function insert_image_alt_tag($post_ID,$update_tag=1,$update_title=true){
+function sait_set_tags($post_ID,$update_tag=1,$update_title=true){
 	// $update_tag -> 0:none, 1:all, 2:empty only
 	$updated = array('title'=>false,'tag'=>false);
 
@@ -94,7 +80,7 @@ function insert_image_alt_tag($post_ID,$update_tag=1,$update_title=true){
 * Getting all posts that are attachments (images included) and adds the the
 * alt text meta data to the image based on the title of the post
 */
-function batch_update_image_tags($update_tags,$update_titles){
+function sait_batch_set_image_tags($update_tags,$update_titles){
 	// $update_tags -> 0:none, 1:all, 2:empty only
 
 	$total = 0;
@@ -111,7 +97,7 @@ function batch_update_image_tags($update_tags,$update_titles){
 	$attachments = get_posts($args);
 	if ($attachments) foreach ($attachments as $post){
 		if ( wp_attachment_is_image( $post->ID ) ){
-			$updated = insert_image_alt_tag($post->ID,$update_tags,$update_titles);
+			$updated = sait_set_tags($post->ID,$update_tags,$update_titles);
 			if($updated['tag']) $tags++;
 			if($updated['title']) $titles++;
 			$total++;

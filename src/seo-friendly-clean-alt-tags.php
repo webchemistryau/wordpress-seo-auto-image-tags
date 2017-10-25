@@ -78,7 +78,9 @@ function insert_image_alt_tag($post_ID,$update_tag=1,$update_title=true){
 	//Updates the alt tag to be the same as the title
 	if($update_tag){
 		if ( ! add_post_meta( $post_ID, '_wp_attachment_image_alt', $clean_title, true ) ){
-			if($update_tag==1){
+			$tag = get_post_meta( $post_ID, '_wp_attachment_image_alt', true );
+
+			if(empty($tag) || $update_tag==1){
 				update_post_meta ( $post_ID, '_wp_attachment_image_alt', $clean_title );
 				$updated['tag'] = true;
 			}

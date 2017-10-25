@@ -131,7 +131,7 @@ class SeoImageSettings{
 	public function update_tags_display(){
 		$options = get_option( 'seo_image_option' );
 		
-		echo ':::'. intval($options['update_tags']) .' '.boolval($options['update_titles']).':::';
+		// echo ':::'. intval($options['update_tags']) .' '.boolval($options['update_titles']).':::';
 		$file_counts = batch_update_image_tags(intval($options['update_tags']),boolval($options['update_titles']));
 
 		echo $this->result_count2($file_counts);

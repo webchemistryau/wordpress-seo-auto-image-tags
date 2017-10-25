@@ -54,8 +54,12 @@ function seo_image_settings_link( $actions, $plugin_file ){
 */
 add_filter('add_attachment', 'insert_image_alt_tag', 10, 2);
 
-function insert_image_alt_tag($post_ID){
+function insert_image_alt_tag($post_ID,$update_tag,$update_title){
+	// $update_tag -> 1:all, 2:empty only
+	$result = array('updated_title'=>false,'updated_tag'=>false);
+
 	if(!wp_attachment_is_image( $post_ID )) return;
+	
 	$clean_title = pathinfo(get_attached_file($post_ID),PATHINFO_FILENAME);
 	//Make alphanumeric (removes all other characters)
 	$clean_title = trim(preg_replace("/[^[:alnum:]]+/"," ", $clean_title));
@@ -63,15 +67,24 @@ function insert_image_alt_tag($post_ID){
 	$clean_title = ucwords(strtolower($clean_title));
 	
 	//Replace the Title with the new clean title we created
-	$my_post = array(
-		'ID'			=>  $post_ID,
-		'post_title'	=>  $clean_title,
-	);
-	wp_update_post($my_post);
-		//Updates the alt tag to be the same as the title
-	if ( ! add_post_meta( $post_ID, '_wp_attachment_image_alt', $clean_title, true ) ){
-		update_post_meta ( $post_ID, '_wp_attachment_image_alt', $clean_title );
-	} 
+	if($update_title){
+		$my_post = array(
+			'ID'			=>  $post_ID,
+			'post_title'	=>  $clean_title,
+		);
+		wp_update_post($my_post);
+		$result['updated_title'] = true;
+	}
+	//Updates the alt tag to be the same as the title
+	if($update_tag){
+		if ( ! add_post_meta( $post_ID, '_wp_attachment_image_alt', $clean_title, true ) ){
+			if($update_tag==1){
+				update_post_meta ( $post_ID, '_wp_attachment_image_alt', $clean_title );
+				$result['updated_tag'] = true;
+			}
+		} 
+		else $result['updated_tag'] = true;
+	}
 }
 
 /**
@@ -79,23 +92,12 @@ function insert_image_alt_tag($post_ID){
 * alt text meta data to the image based on the title of the post
 */
 function batch_update_image_tags($update_tags,$update_titles){
+	// $update_tags -> 1:all, 2:empty only
 
 	$total = 0;
 	$created = 0;
 	$updated = 0;
 	$deleted = 0;
-
-	$count = array(
-		'total' => $total,
-		'created' => print_r($update_tags,true),
-		'updated' => print_r($update_titles,true),
-		'deleted' => $deleted
-	);
-
-	//count of files updated
-	return $count;
-
-
 
 	$args = array(
 		'post_type' => 'attachment',
@@ -107,31 +109,17 @@ function batch_update_image_tags($update_tags,$update_titles){
 	$attachments = get_posts($args);
 	if ($attachments) foreach ($attachments as $post){
 		if ( wp_attachment_is_image( $post->ID ) ){
-			setup_postdata($post);
+			// setup_postdata($post);
+			
 			$title = get_the_title($post->ID);
 			$tag = get_post_meta( $post->ID, '_wp_attachment_image_alt', true );
+			
 			$tag_str = strval($tag);
 			$tag_len = strlen($tag_str);
 			//echo $type;
+			
+			$updated = insert_image_alt_tag($post->ID);
 
-			if ( $is_update ){
-				//if has post meta for alt tag, update it else add it.
-				if (! add_post_meta( $post->ID, '_wp_attachment_image_alt', $title, true )){
-					if ((empty($tag) || (($tag_len <= 2 ) && ($tag_str !== $title)))){
-						insert_image_alt_tag($post->ID);
-							$updated++;
-					}
-				} else {
-					insert_image_alt_tag($post->ID);
-					$created++; //update counter
-				}
-			} else {
-				//if has post meta for alt tag, update it else add it.
-				if (! empty($tag) ){
-					delete_post_meta($post->ID, '_wp_attachment_image_alt', $title);
-					$deleted++; //update counter
-				} //end add_post_meta
-			}
 			$total++;
 		} //end of image_mime
 

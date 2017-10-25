@@ -108,12 +108,10 @@ class SeoImageSettings{
 	 */
 	public function sanitize( $input )
 	{
+		// return $input;
 		$new_input = array();
-
-		if( isset( $input['update_titles'] ) ) $new_input['update_titles'] = absint( $input['update_titles'] );
-
+		if( isset( $input['update_titles'] ) ) $new_input['update_titles'] = boolval( $input['update_titles'] );
 		if( isset( $input['update_tags'] ) ) $new_input['update_tags'] = absint( $input['update_tags'] );
-
 		return $new_input;
 	}
 
@@ -159,7 +157,7 @@ class SeoImageSettings{
 		print_r($options);
 		?></pre><?php
 
-		echo '<input type="checkbox" id="update_titles" name="seo_image_option[update_titles]" ' . checked( 1, $options['update_titles'], false ) . '/>';
+		echo '<input type="checkbox" id="update_titles" name="seo_image_option[update_titles]"  value="true" ' . checked(true, $options['update_titles'], false ) . '/>';
 		// echo '<input type="checkbox" id="update_titles" name="update_titles" />';
 	}
 

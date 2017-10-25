@@ -54,9 +54,9 @@ function seo_image_settings_link( $actions, $plugin_file ){
 */
 add_filter('add_attachment', 'insert_image_alt_tag', 10, 2);
 
-function insert_image_alt_tag($post_ID,$update_tag,$update_title){
+function insert_image_alt_tag($post_ID,$update_tag=1,$update_title=true){
 	// $update_tag -> 1:all, 2:empty only
-	$result = array('updated_title'=>false,'updated_tag'=>false);
+	$updated = array('title'=>false,'tag'=>false);
 
 	if(!wp_attachment_is_image( $post_ID )) return;
 	
@@ -73,18 +73,19 @@ function insert_image_alt_tag($post_ID,$update_tag,$update_title){
 			'post_title'	=>  $clean_title,
 		);
 		wp_update_post($my_post);
-		$result['updated_title'] = true;
+		$updated['title'] = true;
 	}
 	//Updates the alt tag to be the same as the title
 	if($update_tag){
 		if ( ! add_post_meta( $post_ID, '_wp_attachment_image_alt', $clean_title, true ) ){
 			if($update_tag==1){
 				update_post_meta ( $post_ID, '_wp_attachment_image_alt', $clean_title );
-				$result['updated_tag'] = true;
+				$updated['tag'] = true;
 			}
 		} 
-		else $result['updated_tag'] = true;
+		else $updated['tag'] = true;
 	}
+	return $updated;
 }
 
 /**
@@ -95,9 +96,8 @@ function batch_update_image_tags($update_tags,$update_titles){
 	// $update_tags -> 1:all, 2:empty only
 
 	$total = 0;
-	$created = 0;
-	$updated = 0;
-	$deleted = 0;
+	$tags = 0;
+	$titles = 0;
 
 	$args = array(
 		'post_type' => 'attachment',
@@ -109,27 +109,17 @@ function batch_update_image_tags($update_tags,$update_titles){
 	$attachments = get_posts($args);
 	if ($attachments) foreach ($attachments as $post){
 		if ( wp_attachment_is_image( $post->ID ) ){
-			// setup_postdata($post);
-			
-			$title = get_the_title($post->ID);
-			$tag = get_post_meta( $post->ID, '_wp_attachment_image_alt', true );
-			
-			$tag_str = strval($tag);
-			$tag_len = strlen($tag_str);
-			//echo $type;
-			
-			$updated = insert_image_alt_tag($post->ID);
-
+			$updated = insert_image_alt_tag($post->ID,$update_tags,$update_titles);
+			if($updated['tag']) $tags++;
+			if($updated['title']) $titles++;
 			$total++;
 		} //end of image_mime
-
 	} //end foreach
 
 	$count = array(
 		'total' => $total,
-		'created' => $created,
-		'updated' => $updated,
-		'deleted' => $deleted
+		'tags' => $tags,
+		'titles' => $titles
 	);
 
 	//count of files updated

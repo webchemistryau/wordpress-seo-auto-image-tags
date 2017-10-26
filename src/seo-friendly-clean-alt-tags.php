@@ -82,7 +82,6 @@ function sait_set_tags($post_ID,$update_tag=1,$update_title=true){
 */
 function sait_batch_set_image_tags($update_tags,$update_titles){
 	// $update_tags -> 0:none, 1:all, 2:empty only
-
 	$total = 0;
 	$tags = 0;
 	$titles = 0;

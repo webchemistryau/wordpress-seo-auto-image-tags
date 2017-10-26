@@ -1,22 +1,37 @@
 /*
 	INCLUDES ______________________________________________________________________
 */
-var gulp = require('gulp');
-var autoprefixer = require('gulp-autoprefixer');
-var sass = require('gulp-sass');
-var cleanCSS = require('gulp-clean-css');
-var jshint = require('gulp-jshint');
-var jshintstylish = require('jshint-stylish');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-var rename = require('gulp-rename');
-var htmlmin = require('gulp-htmlmin');
-var imagemin = require('gulp-imagemin');
+const gulp = require('gulp');
+const autoprefixer = require('gulp-autoprefixer');
+const sass = require('gulp-sass');
+const cleanCSS = require('gulp-clean-css');
+const jshint = require('gulp-jshint');
+const jshintstylish = require('jshint-stylish');
+const concat = require('gulp-concat');
+const uglify = require('gulp-uglify');
+const rename = require('gulp-rename');
+const htmlmin = require('gulp-htmlmin');
+const imagemin = require('gulp-imagemin');
+const gulpif = require('gulp-if');
+var connection_dest;
+var conn,ftp_connect;function createFTPconnection(path){
+	try{ 
+		ftp_connect  = require(path);
+		if(ftp_connect.remote_path[ftp_connect.remote_path.length-1]!='/') ftp_connect.remote_path+='/';
+		const ftp = require( 'vinyl-ftp' );
+		conn = ftp.create( ftp_connect );
+	}catch(e){}}
+
 /*
 	DIRECTORIES ______________________________________________________________________
 
 	ALWAYS FINISH DIRECTORIES WITH SLASH '/'
 */
+
+/*ftp_connect.json attributes: host, user, password, parallel, log, remote_path
+Comment this line if FTP won't be used
+*/
+createFTPconnection('./ftp_connect.json');
 
 var lib_dir = './node_modules/';
 var src_dir = "./src/";
@@ -29,7 +44,6 @@ var script_build = build_dir+'js/';
 var html_src = src_dir+'**/*.html';
 var html_build = build_dir;
 var php_src = src_dir+'**/*.php';
-var php_build = build_dir;
 
 var lib_src = [
 	// lib_dir+'path/to/folder/script.js',
@@ -43,18 +57,16 @@ var lib_other_src = [ //fonts,etc
 var lib_build = build_dir+'lib/';
 
 var scss_src = src_dir+'**/*.scss';
-var scss_build = build_dir+'';
 
 var img_src = src_dir+'img/**';
-var img_build = build_dir+'img/';
 var img_screenshoot_src = src_dir+'img/screenshot.jpg';
-var img_screenshoot_build = build_dir+'/';
 
 var fonts_src = src_dir+'fonts/*';
-var fonts_build = build_dir+'fonts/';
 
-var data_src = src_dir+'data/*';
-var data_build = build_dir+'data/';
+var others_src = [
+	src_dir+'license.txt',
+	src_dir+'readme.txt',
+];
 
 /*
 	TASKS ______________________________________________________________________
@@ -75,9 +87,11 @@ gulp.task('script', function() {
 	gulp.src(script_src)
 		.pipe(concat(script_concat))
 			.pipe(gulp.dest(script_build))
+			.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
 		.pipe(rename({suffix:'.min'}))
 		.pipe(uglify())
 			.pipe(gulp.dest(script_build))
+			.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
 	;
 });
 gulp.task('script_w', function(){gulp.watch(script_src,['script']);});
@@ -91,13 +105,16 @@ gulp.task('lib', function() {
 	gulp.src(lib_src,{base:lib_dir})
 		.pipe(uglify())
 		.pipe(gulp.dest(lib_build))
+		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
 
 	gulp.src(lib_css_src,{base:lib_dir})
 		.pipe(cleanCSS({compatibility: 'ie9'}))
 		.pipe(gulp.dest(lib_build))
+		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
 
 	gulp.src(lib_other_src,{base:lib_dir})
 		.pipe(gulp.dest(lib_build))
+		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
 });
 tasks.once.push('lib');
 
@@ -107,7 +124,10 @@ gulp.task('php',function() {
 	gulp.src(php_src,{base:src_dir})
 	// gulp.src(php_src,{base:src_dir,read:false})
 		// .pipe(phpMinify({binary: 'C:/xampp/php/php.exe'}))
-		.pipe(gulp.dest(php_build));
+		// Upload to ftp
+		.pipe(gulp.dest(build_dir))
+		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
+	;
 });
 
 gulp.task('php_w', function() { gulp.watch(php_src,['php']);});
@@ -117,9 +137,10 @@ tasks.watch.push('php_w');
 
 /* HTML ____________________________________________________________________________*/
 gulp.task('html',function(){
-	gulp.src(html_src)
+	gulp.src(html_src,{base:src_dir})
 		.pipe(htmlmin({collapseWhitespace: true}))
-		.pipe(gulp.dest(html_build))
+		.pipe(gulp.dest(build_dir))
+		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
 	;
 });
 gulp.task('html_w',function(){gulp.watch(html_src,['html']);});
@@ -129,14 +150,15 @@ tasks.watch.push('html_w');
 
 /* SCSS ____________________________________________________________________________*/
 gulp.task('scss',function(){
-	gulp.src(scss_src)
+	gulp.src(scss_src,{base:src_dir})
 		.pipe(sass().on('error', sass.logError))
 		.pipe(autoprefixer({
 			browsers: ['last 3 versions','safari 5', 'ie 6', 'ie 7', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'],
 			cascade: false
 		}))
 		.pipe(cleanCSS({compatibility: 'ie9'}))
-		.pipe(gulp.dest(scss_build))
+		.pipe(gulp.dest(build_dir))
+		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
 	;
 });
 gulp.task('scss_w',function(){gulp.watch(scss_src,['scss']);});
@@ -152,14 +174,16 @@ gulp.task('img', function(){
 		img_src,
 	];
 
-	gulp.src(img)
+	gulp.src(img,{base:src_dir})
 		.pipe(imagemin())
-		.pipe(gulp.dest(img_build))
+		.pipe(gulp.dest(build_dir))
+		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
 	;
 
 	gulp.src(img_screenshoot_src)
 		.pipe(imagemin())
-		.pipe(gulp.dest(img_screenshoot_build))
+		.pipe(gulp.dest(build_dir))
+		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
 	;
 });
 gulp.task('img_w', function(){gulp.watch(img_src,['img']);});
@@ -169,13 +193,27 @@ tasks.once.push('img');
 
 /* FONTS ____________________________________________________________________________*/
 gulp.task('fonts', function() {
-   gulp.src(fonts_src)
-   .pipe(gulp.dest(fonts_build));
+	gulp.src(fonts_src,{base:src_dir})
+		.pipe(gulp.dest(build_dir))
+		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
+	;
 });
 gulp.task('fonts_w', function() { gulp.watch(fonts_src,['fonts']);});
 gulp.task('fonts_watch',['fonts','fonts_w']);
 tasks.once.push('fonts');
 // tasks.watch.push('fonts_w');
+
+/* OTHERS ____________________________________________________________________________*/
+gulp.task('others', function() {
+	gulp.src(others_src,{base:src_dir})
+		.pipe(gulp.dest(build_dir))
+		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
+	;
+});
+gulp.task('others_w', function() { gulp.watch(others_src,['others']);});
+gulp.task('others_watch',['others','others_w']);
+tasks.once.push('others');
+tasks.watch.push('others_w');
 
 /* GENERAL ____________________________________________________________________________*/
 gulp.task('once',tasks.once);

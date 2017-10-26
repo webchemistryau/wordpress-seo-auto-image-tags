@@ -123,7 +123,7 @@ class SeoImageSettings{
 	public function print_section_info(){
 		/*HERE IS THE CALLBACK FOR RUN THE PROCESS.
 		IT NEEDS TO BE REPLACED BY A PROPER WAY OF CALLING, AFTER SUBMITED THE FORM, 
-		NOT ONLY WHEN THE SETTINGS WHERE UPDATED*/
+		NOT ONLY WHEN THE SETTINGS WHERE UPDATED*/ 
 		if($this->run_algorithm){
 			$options = get_option( 'seo_image_option' );
 			if($options['update_titles']||$options['update_tags']){

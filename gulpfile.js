@@ -13,14 +13,13 @@ const rename = require('gulp-rename');
 const htmlmin = require('gulp-htmlmin');
 const imagemin = require('gulp-imagemin');
 
+const gulpif = require('gulp-if');
+
 var conn,ftp_connect;try{
 	var ftp_connect  = require('./ftp_connect.json');
 	const ftp = require( 'vinyl-ftp' );
 	conn = ftp.create( ftp_connect );
 }catch(e){}
-function ftpUpload(stream){
-	if(ftp_connect && conn) stream.pipe(conn.dest(ftp_connect.remote_path));
-}
 
 /*
 	DIRECTORIES ______________________________________________________________________
@@ -114,12 +113,12 @@ tasks.once.push('lib');
 /* PHP ____________________________________________________________________________*/
 
 gulp.task('php',function() {
-	var stream = gulp.src(php_src,{base:src_dir})
+	gulp.src(php_src,{base:src_dir})
 	// gulp.src(php_src,{base:src_dir,read:false})
 		// .pipe(phpMinify({binary: 'C:/xampp/php/php.exe'}))
-		.pipe(gulp.dest(php_build));
 	// Upload to ftp
-	ftpUpload(stream);
+		.pipe(gulpif(conn,conn))
+		.pipe(gulp.dest(php_build));
 });
 
 gulp.task('php_w', function() { gulp.watch(php_src,['php']);});

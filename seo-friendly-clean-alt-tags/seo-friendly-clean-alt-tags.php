@@ -44,13 +44,6 @@ function sait_set_tags($post_ID,$update_tag=1,$update_title=true){
 	// $update_tag -> 0:none, 1:all, 2:empty only
 	$updated = array('title'=>false,'tag'=>false);
 
-<<<<<<< HEAD
-function insert_image_alt_tag($post_ID,$update_tag=1,$update_title=true){
-	// $update_tag -> 1:all, 2:empty only
-	$updated = array('title'=>false,'tag'=>false);
-
-=======
->>>>>>> master
 	if(!wp_attachment_is_image( $post_ID )) return;
 	
 	$clean_title = pathinfo(get_attached_file($post_ID),PATHINFO_FILENAME);
@@ -87,14 +80,8 @@ function insert_image_alt_tag($post_ID,$update_tag=1,$update_title=true){
 * Getting all posts that are attachments (images included) and adds the the
 * alt text meta data to the image based on the title of the post
 */
-<<<<<<< HEAD
-function batch_update_image_tags($update_tags,$update_titles){
-	// $update_tags -> 1:all, 2:empty only
-=======
 function sait_batch_set_image_tags($update_tags,$update_titles){
 	// $update_tags -> 0:none, 1:all, 2:empty only
->>>>>>> master
-
 	$total = 0;
 	$tags = 0;
 	$titles = 0;
@@ -109,11 +96,7 @@ function sait_batch_set_image_tags($update_tags,$update_titles){
 	$attachments = get_posts($args);
 	if ($attachments) foreach ($attachments as $post){
 		if ( wp_attachment_is_image( $post->ID ) ){
-<<<<<<< HEAD
-			$updated = insert_image_alt_tag($post->ID,$update_tags,$update_titles);
-=======
 			$updated = sait_set_tags($post->ID,$update_tags,$update_titles);
->>>>>>> master
 			if($updated['tag']) $tags++;
 			if($updated['title']) $titles++;
 			$total++;

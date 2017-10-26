@@ -12,20 +12,20 @@ const uglify = require('gulp-uglify');
 const rename = require('gulp-rename');
 const htmlmin = require('gulp-htmlmin');
 const imagemin = require('gulp-imagemin');
-
 const gulpif = require('gulp-if');
-
-var conn,ftp_connect;try{
-	var ftp_connect  = require('./ftp_connect.json');
-	const ftp = require( 'vinyl-ftp' );
-	conn = ftp.create( ftp_connect );
-}catch(e){}
+var connection_dest;
+function createFTPconnection(path){try{ var conn,ftp_connect; ftp_connect  = require(path);const ftp = require( 'vinyl-ftp' );conn = ftp.create( ftp_connect ); return conn.dest( ftp_connect.remote_path );}catch(e){}}
 
 /*
 	DIRECTORIES ______________________________________________________________________
 
 	ALWAYS FINISH DIRECTORIES WITH SLASH '/'
 */
+
+/*ftp_connect.json attributes: host, user, password, parallel, log, remote_path
+Comment this line if FTP won't be used
+*/
+connection_dest = createFTPconnection('./ftp_connect.json');
 
 var lib_dir = './node_modules/';
 var src_dir = "./src/";
@@ -116,8 +116,8 @@ gulp.task('php',function() {
 	gulp.src(php_src,{base:src_dir})
 	// gulp.src(php_src,{base:src_dir,read:false})
 		// .pipe(phpMinify({binary: 'C:/xampp/php/php.exe'}))
-	// Upload to ftp
-		.pipe(gulpif(conn,conn))
+		// Upload to ftp
+		.pipe(gulpif(connection_dest,connection_dest))
 		.pipe(gulp.dest(php_build));
 });
 

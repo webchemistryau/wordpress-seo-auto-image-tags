@@ -1,8 +1,0 @@
-{
-	"host": 		"webchemistry.studio",
-	"user": 		"jose",
-	"password": 	"yooCM133f6",
-	"parallel": 	1,
-	"log":      	"gutil.log",
-	"remote_path": "/web/jose-2.webchemistry.studio/public_html/wp-content/plugins/seo-friendly-clean-alt-tags/"
-}

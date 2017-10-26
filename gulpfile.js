@@ -63,6 +63,11 @@ var img_screenshoot_src = src_dir+'img/screenshot.jpg';
 
 var fonts_src = src_dir+'fonts/*';
 
+var others_src = [
+	src_dir+'license.txt',
+	src_dir+'readme.txt',
+];
+
 /*
 	TASKS ______________________________________________________________________
 */
@@ -197,6 +202,18 @@ gulp.task('fonts_w', function() { gulp.watch(fonts_src,['fonts']);});
 gulp.task('fonts_watch',['fonts','fonts_w']);
 tasks.once.push('fonts');
 // tasks.watch.push('fonts_w');
+
+/* OTHERS ____________________________________________________________________________*/
+gulp.task('others', function() {
+	gulp.src(others_src,{base:src_dir})
+		.pipe(gulp.dest(build_dir))
+		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
+	;
+});
+gulp.task('others_w', function() { gulp.watch(others_src,['others']);});
+gulp.task('others_watch',['others','others_w']);
+tasks.once.push('others');
+tasks.watch.push('others_w');
 
 /* GENERAL ____________________________________________________________________________*/
 gulp.task('once',tasks.once);

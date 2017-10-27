@@ -28,7 +28,7 @@ function sait_settings_link( $actions, $plugin_file ){
 	if (!isset($plugin)) $plugin = plugin_basename(__FILE__);
 
 	if ($plugin == $plugin_file){
-		$settings = array('settings' => '<a href="tools.php?page=seo-auto-image-tags">' . __('Settings', 'General') . '</a>');
+		$settings = array('settings' => '<a href="tools.php?page=seo-auto-image-tags">' . __('Tags Updater', 'General') . '</a>');
 		$actions = array_merge($settings, $actions);
 	}
 	return $actions;

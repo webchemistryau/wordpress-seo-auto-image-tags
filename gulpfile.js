@@ -59,7 +59,10 @@ var lib_build = build_dir+'lib/';
 var scss_src = src_dir+'**/*.scss';
 
 var img_src = src_dir+'img/**';
-var img_screenshoot_src = src_dir+'img/screenshot.jpg';
+var img_screenshoots_src = [
+	src_dir+'img/screenshot-1.jpg',
+	src_dir+'img/screenshot-2.jpg',
+];
 
 var fonts_src = src_dir+'fonts/*';
 
@@ -170,18 +173,19 @@ tasks.watch.push('scss_w');
 
 gulp.task('img', function(){
 	var img = [
-		'!'+img_screenshoot_src,
+		'!'+img_screenshoots_src[0],
+		'!'+img_screenshoots_src[1],
 		img_src,
 	];
 
 	gulp.src(img,{base:src_dir})
-		.pipe(imagemin())
+		// .pipe(imagemin())
 		.pipe(gulp.dest(build_dir))
 		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
 	;
 
-	gulp.src(img_screenshoot_src)
-		.pipe(imagemin())
+	gulp.src(img_screenshoots_src)
+		// .pipe(imagemin())
 		.pipe(gulp.dest(build_dir))
 		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
 	;

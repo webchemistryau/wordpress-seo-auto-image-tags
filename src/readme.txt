@@ -23,7 +23,7 @@ You can run the database updater to create, update, or delete image tag data for
 
 1. Upload the plugin files to the `/wp-content/plugins/` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress.
-3. You can configure the settings via the TOOLS menu.
+3. You can run the tags updater via the TOOLS menu.
 
 == Upgrade Notice ==
 
@@ -31,8 +31,9 @@ TODO
 
 == Screenshots ==
 
-1. Screen shot 1
+1. Updater tool settings
+2. Updater tool results
 
 == Changelog ==
-= 0.0.1 =
+= 0.0.3 =
 * Initial release for plugin

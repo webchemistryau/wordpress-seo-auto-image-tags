@@ -34,5 +34,5 @@ TODO
 1. Screen shot 1
 
 == Changelog ==
-= 1.0 =
+= 0.0.1 =
 * Initial release for plugin

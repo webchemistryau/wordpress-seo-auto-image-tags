@@ -7,6 +7,12 @@ Auto generate clean ALT tags for your images as they are uploaded. Automatically
 SEO Auto Image Tags automatically updates the title and alt tag for every image uploaded with a clean Title Case version of the file name! Don't waste your time manually craeting SEO Friendly Tags, let SEO Auto Image Tags do the work for you!
 You can run the database updater to create, update, or delete image tag data for all images in the media library. All with a lightweight and efficient clientside script to EVERY image is properly tagged.
 
+Support
+-------
+This is a developer's portal for SEO Auto Image Tags and should not be used for user support. Please visit the
+[support forums](https://wordpress.org/support/plugin/seo-auto-image-tags) for that purpose.
+
+
 Installation
 ------------
 It's recommended to use the Gulp file for build the distribution or testing folder. Feel free to include and or suggest better weays to do it.
@@ -26,10 +32,6 @@ It's recommended to use the Gulp file for build the distribution or testing fold
 6. Go to admin panel to play with it.
 
 
-Support
--------
-This is a developer's portal for SEO Auto Image Tags and should not be used for user support. Please visit the
-[support forums](https://wordpress.org/support/plugin/seo-auto-image-tags) for that purpose.
 
 License
 ------------

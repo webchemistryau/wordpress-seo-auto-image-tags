@@ -6,7 +6,7 @@
 * Version: 1.0
 * Author: Web Chemistry
 * Author URI: https://www.webchemistry.com.au/
-* Text Domain: seo-friendly-clean-alt-tags
+* Text Domain: seo-auto-image-tags
 * License: GPL2
 */
 
@@ -18,7 +18,7 @@ include_once('admin/class-seo-image-settings.php');
 //add_action( 'admin_notices', 'sait_display_activation_notice' );
 function sait_display_activation_notice(){
 	//if (is_plugin_active('seo-image-alt-tags/seo-image-alt-tags.php')){
-		echo '<div id="error" class="error notice is-dismissible"><p><b>SEO Auto Image Tags</b> may not be completely up to date. <a href="tools.php?page=seo-friendly-clean-alt-tags">Click here</a> to configure settings and update database.</div>';
+		echo '<div id="error" class="error notice is-dismissible"><p><b>SEO Auto Image Tags</b> may not be completely up to date. <a href="tools.php?page=seo-auto-image-tags">Click here</a> to configure settings and update database.</div>';
 	//}
 }
 
@@ -28,7 +28,7 @@ function sait_settings_link( $actions, $plugin_file ){
 	if (!isset($plugin)) $plugin = plugin_basename(__FILE__);
 
 	if ($plugin == $plugin_file){
-		$settings = array('settings' => '<a href="tools.php?page=seo-friendly-clean-alt-tags">' . __('Settings', 'General') . '</a>');
+		$settings = array('settings' => '<a href="tools.php?page=seo-auto-image-tags">' . __('Settings', 'General') . '</a>');
 		$actions = array_merge($settings, $actions);
 	}
 	return $actions;

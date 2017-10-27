@@ -35,7 +35,7 @@ createFTPconnection('./ftp_connect.json');
 
 var lib_dir = './node_modules/';
 var src_dir = "./src/";
-var build_dir = "./seo-friendly-clean-alt-tags/";
+var build_dir = "./seo-auto-image-tags/";
 
 var script_src = src_dir+'js/**/*.js';
 var script_concat='main.js';

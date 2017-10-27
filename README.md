@@ -15,7 +15,7 @@ TODO
 Support
 -------
 This is a developer's portal for SEO Friendly Clean Alt Tags and should not be used for support. Please visit the
-[support forums](https://wordpress.org/support/plugin/seo-friendly-clean-alt-tags).
+[support forums](https://wordpress.org/support/plugin/seo-auto-image-tags).
 
 License
 ------------

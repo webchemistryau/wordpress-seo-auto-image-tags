@@ -1,7 +1,7 @@
 <?php
 /*
 * Plugin Name: SEO Auto Image Tags
-* Plugin URI: https://www.webchemistry.com.au/
+* Plugin URI: https://github.com/webchemistryau/seo-auto-image-tags
 * Description: Auto generate clean ALT tags & Title tags for your images as they are uploaded. Automatically removes hyphens, periods and other characters to generate clean alt tag names.
 * Version: 0.0.4
 * Author: Web Chemistry

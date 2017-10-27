@@ -33,7 +33,7 @@ class SeoImageSettings{
 			'SEO Auto Image Tags',
 			'SEO Auto Image Tags',
 			'manage_options',
-			'seo-friendly-clean-alt-tags',
+			'seo-auto-image-tags',
 			array( $this, 'create_seo_image_settings_page' )
 		);
 	}

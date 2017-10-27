@@ -3,11 +3,11 @@ Author: Web Chemistry
 Forked from a plug-in with the Contributers listed
 Contributors: amg26, ryanvaness, jvalcq, Orion Group LLC, menkom, Web Chemistry
 Tags: seo images, seo, optimize images, image seo, image tags, alt tags, media, search engine optimization
-Donate link: http://example.com/
+Donate link: https://webchemistry.com.au/
 Requires at least: 4.8
 Tested up to: 4.8.2
 Requires PHP: 5.6
-Stable tag: 1.0
+Stable tag: 0.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,5 +34,5 @@ TODO
 1. Screen shot 1
 
 == Changelog ==
-= 1.0 =
+= 0.0.1 =
 * Initial release for plugin

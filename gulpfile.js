@@ -12,8 +12,7 @@ const uglify = require('gulp-uglify');
 const rename = require('gulp-rename');
 const htmlmin = require('gulp-htmlmin');
 const imagemin = require('gulp-imagemin');
-const gulpif = require('gulp-if');
-var connection_dest;
+var gutil = require('gulp-util');
 var conn,ftp_connect;function createFTPconnection(path){
 	try{ 
 		ftp_connect  = require(path);
@@ -21,6 +20,7 @@ var conn,ftp_connect;function createFTPconnection(path){
 		const ftp = require( 'vinyl-ftp' );
 		conn = ftp.create( ftp_connect );
 	}catch(e){}}
+function sendFTP(){	return (!conn||!ftp_connect)? gutil.noop():conn.dest( ftp_connect.remote_path );}
 
 /*
 	DIRECTORIES ______________________________________________________________________
@@ -90,11 +90,11 @@ gulp.task('script', function() {
 	gulp.src(script_src)
 		.pipe(concat(script_concat))
 			.pipe(gulp.dest(script_build))
-			.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
+			.pipe(sendFTP())
 		.pipe(rename({suffix:'.min'}))
 		.pipe(uglify())
 			.pipe(gulp.dest(script_build))
-			.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
+			.pipe(sendFTP())
 	;
 });
 gulp.task('script_w', function(){gulp.watch(script_src,['script']);});
@@ -108,16 +108,16 @@ gulp.task('lib', function() {
 	gulp.src(lib_src,{base:lib_dir})
 		.pipe(uglify())
 		.pipe(gulp.dest(lib_build))
-		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
+		.pipe(sendFTP())
 
 	gulp.src(lib_css_src,{base:lib_dir})
 		.pipe(cleanCSS({compatibility: 'ie9'}))
 		.pipe(gulp.dest(lib_build))
-		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
+		.pipe(sendFTP())
 
 	gulp.src(lib_other_src,{base:lib_dir})
 		.pipe(gulp.dest(lib_build))
-		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
+		.pipe(sendFTP())
 });
 tasks.once.push('lib');
 
@@ -129,7 +129,7 @@ gulp.task('php',function() {
 		// .pipe(phpMinify({binary: 'C:/xampp/php/php.exe'}))
 		// Upload to ftp
 		.pipe(gulp.dest(build_dir))
-		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
+		.pipe(sendFTP())
 	;
 });
 
@@ -143,7 +143,7 @@ gulp.task('html',function(){
 	gulp.src(html_src,{base:src_dir})
 		.pipe(htmlmin({collapseWhitespace: true}))
 		.pipe(gulp.dest(build_dir))
-		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
+		.pipe(sendFTP())
 	;
 });
 gulp.task('html_w',function(){gulp.watch(html_src,['html']);});
@@ -161,7 +161,7 @@ gulp.task('scss',function(){
 		}))
 		.pipe(cleanCSS({compatibility: 'ie9'}))
 		.pipe(gulp.dest(build_dir))
-		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
+		.pipe(sendFTP())
 	;
 });
 gulp.task('scss_w',function(){gulp.watch(scss_src,['scss']);});
@@ -181,13 +181,13 @@ gulp.task('img', function(){
 	gulp.src(img,{base:src_dir})
 		// .pipe(imagemin())
 		.pipe(gulp.dest(build_dir))
-		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
+		.pipe(sendFTP())
 	;
 
 	gulp.src(img_screenshoots_src)
 		// .pipe(imagemin())
 		.pipe(gulp.dest(build_dir))
-		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
+		.pipe(sendFTP())
 	;
 });
 gulp.task('img_w', function(){gulp.watch(img_src,['img']);});
@@ -199,7 +199,7 @@ tasks.once.push('img');
 gulp.task('fonts', function() {
 	gulp.src(fonts_src,{base:src_dir})
 		.pipe(gulp.dest(build_dir))
-		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
+		.pipe(sendFTP())
 	;
 });
 gulp.task('fonts_w', function() { gulp.watch(fonts_src,['fonts']);});
@@ -211,7 +211,7 @@ tasks.once.push('fonts');
 gulp.task('others', function() {
 	gulp.src(others_src,{base:src_dir})
 		.pipe(gulp.dest(build_dir))
-		.pipe(gulpif(conn&&ftp_connect,conn&&ftp_connect?conn.dest( ftp_connect.remote_path ):null))
+		.pipe(sendFTP())
 	;
 });
 gulp.task('others_w', function() { gulp.watch(others_src,['others']);});

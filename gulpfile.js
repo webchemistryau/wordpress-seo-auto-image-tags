@@ -172,23 +172,13 @@ tasks.watch.push('scss_w');
 /* IMAGES ____________________________________________________________________________*/
 
 gulp.task('img', function(){
-	var img = [
-		'!'+img_screenshoots_src[0],
-		'!'+img_screenshoots_src[1],
-		img_src,
-	];
 
-	gulp.src(img,{base:src_dir})
+	gulp.src(img_src,{base:src_dir})
 		// .pipe(imagemin())
 		.pipe(gulp.dest(build_dir))
 		.pipe(sendFTP())
 	;
-
-	gulp.src(img_screenshoots_src)
-		// .pipe(imagemin())
-		.pipe(gulp.dest(build_dir))
-		.pipe(sendFTP())
-	;
+	
 });
 gulp.task('img_w', function(){gulp.watch(img_src,['img']);});
 gulp.task('img_watch',['img','img_w']);
